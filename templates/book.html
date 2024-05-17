@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="mb-4">Books</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Subtitle</th>
+                    <th scope="col">Authors</th>
+                    <th scope="col">Publisher</th>
+                    <th scope="col">Published Date</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Distribution Expense</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books %}
+                    <tr>
+                        <th scope="row">{{ book.id }}</th>
+                        <td>{{ book.title }}</td>
+                        <td>{{ book.subtitle }}</td>
+                        <td>{{ book.authors }}</td>
+                        <td>{{ book.publisher }}</td>
+                        <td>{{ book.published_date }}</td>
+                        <td>{{ book.category }}</td>
+                        <td>{{ book.distribution_expense }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <nav>
+            <ul class="pagination">
+                {% if books.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1">First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ books.previous_page_number }}">Previous</a>
+                    </li>
+                {% endif %}
+                <li class="page-item active">
+                    <span class="page-link">Page {{ books.number }} of {{ books.paginator.num_pages }}</span>
+                </li>
+                {% if books.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ books.next_page_number }}">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ books.paginator.num_pages }}">Last</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+{% endblock %}

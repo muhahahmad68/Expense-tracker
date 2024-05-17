@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from tablib import Dataset
+from django.core.paginator import Paginator
 from .resource import BookResource
 from .models import Book
 
@@ -40,4 +41,15 @@ def upload(request):
 
 def home(request):
     return render(request, 'home.html', {})
+
+from django.shortcuts import render
+from .models import Book
+
+def book_tracker(request):
+    books_list = Book.objects.all()
+    paginator = Paginator(books_list, 20)
+
+    page_number = request.GET.get('page')
+    books = paginator.get_page(page_number)
+    return render(request, 'book.html', {'books': books})
 
