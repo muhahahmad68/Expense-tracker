@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from tablib import Dataset
 from django.core.paginator import Paginator
+from django.db.models import Sum
 from .resource import BookResource
 from .models import Book
 
@@ -46,10 +47,20 @@ from django.shortcuts import render
 from .models import Book
 
 def book_tracker(request):
-    books_list = Book.objects.all()
+    books_list = Book.objects.all().order_by('published_date')
     paginator = Paginator(books_list, 20)
 
     page_number = request.GET.get('page')
     books = paginator.get_page(page_number)
     return render(request, 'book.html', {'books': books})
 
+def expense_analysis(request):
+    expenses = Book.objects.all()
+    total_expense = expenses.aggregate(Sum('distribution_expense'))['distribution_expense__sum']
+    category_total = list(expenses.values('category').annotate(total=Sum('distribution_expense')))
+    context = {
+        'expenses': expenses,
+        'total_expense': total_expense,
+        'category_total': category_total,
+    }
+    return render(request, 'expense.html', context)

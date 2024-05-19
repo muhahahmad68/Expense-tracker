@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Expense Tracker</h1>
+    <h2>Total Expense: ${{ total_expense }}</h2>
+    <canvas id="expenseChart" width="400" height="200"></canvas>
+    {{ category_total | json_script:"categoryTotals"}}
+    <script>
+        const categoryTotals = JSON.parse(document.getElementById('categoryTotals').textContent);
+        const labels = categoryTotals.map(item => item.category);
+        const data = categoryTotals.map(item => item.total);
+
+        const ctx = document.getElementById('expenseChart').getContext('2d');
+        const expenseChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Expenses by Category',
+                    data: data,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}
